@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .checkout-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .name-fields {
+            display: flex;
+            gap: 20px;
+        }
+
+        .name-fields div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .address-fields,
+        .name-fields,
+        .payment-method {
+            margin-bottom: 20px;
+        }
+
+        #checkout-form {
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Checkout</h1>
+        <button onclick="goToStore()">Go Back to Store</button>
+        <button onclick="viewCart()">View Cart</button>
+    </header>
+    <main>
+        <div class="checkout-container">
+            <form id="checkout-form" onsubmit="return showConfirmation()" method="post">
+                <h2>Checkout</h2>
+                <div class="name-fields">
+                    <div>
+                        <label for="first-name">First Name:</label>
+                        <input type="text" id="first-name" name="first-name" required>
+                    </div>
+                    <div>
+                        <label for="last-name">Last Name:</label>
+                        <input type="text" id="last-name" name="last-name" required>
+                    </div>
+                </div>
+                <div class="address-fields">
+                    <div>
+                        <label for="address">Address:</label>
+                        <textarea id="address" name="address" required></textarea>
+                    </div>
+                </div>
+                <div class="payment-method">
+                    <label for="payment">Payment Method:</label>
+                    <select id="payment" name="payment">
+                        <option value="credit_card">Credit Card</option>
+                        <option value="paypal">Gcash</option>
+                        <option value="cash">Cash on Delivery</option>
+                    </select>
+                </div>
+                <div>
+                    <input type="submit" value="Place Order">
+                </div>
+            </form>
+            <div id="order-summary">
+                <h2>Order Summary</h2>
+                <ul id="summary-list"></ul>
+                <p id="total-price"></p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function viewCart() {
+            window.location.href = 'checkout.html'; // Change to the cart page
+        }
+
+        function showConfirmation() {
+            // Display order confirmation as an alert
+            alert('Thank you for your order! Your order has been placed.');
+
+            // Prevent the form from submitting and redirecting to confirmation.html
+            return false;
+        }
+
+        function goToStore() {
+            window.location.href = 'index.html'; // Change to the index page
+        }
+
+        // Function to generate and display order summary
+        function generateOrderSummary() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const summaryList = document.getElementById('summary-list');
+            const totalPriceElement = document.getElementById('total-price');
+            let totalPrice = 0;
+
+            // Clear existing summary
+            summaryList.innerHTML = '';
+
+            // Generate summary items
+            cart.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${item.name} - ₱${item.price.toFixed(2)}`;
+                summaryList.appendChild(listItem);
+                totalPrice += item.price;
+            });
+
+            // Display total price
+            totalPriceElement.textContent = `Total Price: ₱${totalPrice.toFixed(2)}`;
+        }
+
+        // Call the function when the page loads
+        generateOrderSummary();
+    </script>
+</body>
+</html>
